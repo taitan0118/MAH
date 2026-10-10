@@ -1,0 +1,60 @@
+name: Build MAH
+on:
+  workflow_dispatch:
+    inputs:
+      version: { description: 'Số bản, ví dụ v1.0.0', default: 'v1.0.0', required: true }
+env:
+  REL_REPO: taitan0118/MAH-tai-ve
+jobs:
+  desktop:
+    strategy: { matrix: { os: [windows-latest, macos-latest] } }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm install
+      - run: npx electron-builder ${{ matrix.os == 'windows-latest' && '--win' || '--mac' }} --publish never
+      - uses: actions/upload-artifact@v4
+        with:
+          name: desktop-${{ matrix.os }}
+          path: |
+            dist/MAH-*.exe
+            dist/MAH-*.dmg
+          retention-days: 1
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 21 }
+      - run: npm install && npx cap add android && npx cap sync android
+      - run: cd android && ./gradlew assembleDebug
+      - run: mkdir out && cp android/app/build/outputs/apk/debug/app-debug.apk out/MAH-Android.apk
+      - uses: actions/upload-artifact@v4
+        with: { name: android, path: out/MAH-Android.apk, retention-days: 1 }
+  ios:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm install && npx cap add ios && npx cap sync ios
+      - run: |
+          cd ios/App
+          xcodebuild -project App.xcodeproj -scheme App -configuration Release -sdk iphoneos -derivedDataPath build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
+          mkdir -p Payload && cp -R build/Build/Products/Release-iphoneos/App.app Payload/ && zip -qr MAH-iOS-unsigned.ipa Payload
+      - uses: actions/upload-artifact@v4
+        with: { name: ios, path: ios/App/MAH-iOS-unsigned.ipa, retention-days: 1 }
+  release:
+    needs: [desktop, android, ios]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with: { path: files, merge-multiple: true }
+      - env:
+          GH_TOKEN: ${{ secrets.TAI_VE_TOKEN }}
+        run: |
+          gh release create "${{ inputs.version }}" files/* --repo "$REL_REPO" --title "MAH ${{ inputs.version }}" --notes "Bản cài MAH, miễn phí, cấm bán lại. iPhone dùng Safari, chọn Chia sẻ rồi Thêm vào MH chính."
