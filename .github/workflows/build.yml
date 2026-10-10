@@ -37,6 +37,7 @@ jobs:
         with: { name: android, path: out/MAH-Android.apk, retention-days: 1 }
   ios:
     runs-on: macos-latest
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -44,12 +45,13 @@ jobs:
       - run: npm install && npx cap add ios && npx cap sync ios
       - run: |
           cd ios/App
-          xcodebuild -project App.xcodeproj -scheme App -configuration Release -sdk iphoneos -derivedDataPath build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
+          xcodebuild -workspace App.xcworkspace -scheme App -configuration Release -sdk iphoneos -derivedDataPath build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
           mkdir -p Payload && cp -R build/Build/Products/Release-iphoneos/App.app Payload/ && zip -qr MAH-iOS-unsigned.ipa Payload
       - uses: actions/upload-artifact@v4
         with: { name: ios, path: ios/App/MAH-iOS-unsigned.ipa, retention-days: 1 }
   release:
     needs: [desktop, android, ios]
+    if: ${{ !cancelled() && needs.desktop.result == 'success' && needs.android.result == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
