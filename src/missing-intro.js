@@ -5,7 +5,7 @@
 (function (global) {
   'use strict';
   var COLORS = { leaf: '#22C55E', legsOnLight: '#2563EB', legsOnDark: '#38BDF8', navy: '#0F172A' };
-  var BAR = 'M28 58 V46 A12 12 0 0 1 40 34 H160 A12 12 0 0 1 172 46 V58 Z';
+  var BAR = 'M26 62 V53 Q26 49 29.5 47 L97 12.5 Q100 11 103 12.5 L170.5 47 Q174 49 174 53 V62 Z'; // mái nhà (logo MAH)
 
   function bez(p, t) {
     var u = 1 - t;
