@@ -10,7 +10,7 @@ button{cursor:pointer}
 :focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 .app{max-width:1040px;margin-inline:auto;padding-block:12px 96px}
 header.top{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;background:var(--blue);color:#fff;position:sticky;top:env(safe-area-inset-top,0px);z-index:20}
-.tile{display:grid;place-items:center;background:var(--navy);border-radius:22%;flex:none;width:44px;height:44px}
+.tile{display:grid;place-items:center;background:#fff;border-radius:22%;flex:none;width:44px;height:44px}
 #site-logo{display:block;width:34px;height:34px}
 .wm{display:flex;flex-direction:column;min-width:0}
 #site-word{font-weight:800;font-size:22px;letter-spacing:.01em;line-height:1.1;color:#fff}
@@ -1630,12 +1630,12 @@ document.addEventListener('change',function(e){
   else if(el.id==='bu'){var u=uOf(S.hid,el.value);if(u)$('bpr').value=u.price;}
 });
 $('house').addEventListener('click',function(){if(H.length)houseSheet();});
-$('site-logo').innerHTML=MissingLogo.svg({size:34,theme:'dark'});
+$('site-logo').innerHTML=MissingLogo.svg({size:34,theme:'light'});
 var LD=loadSaved();if(LD==='corrupt')setTimeout(function(){warn('Dữ liệu trên máy bị lỗi, đã giữ lại bản gốc. Vào Cài đặt > Bản dự phòng để khôi phục.');},500);
 render();
 try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();}catch(e){}
 setTimeout(function(){if(H.length&&!STATE.demo){var last=0;snapList().then(function(l){last=l[0]?l[0].at:0;if(Date.now()-last>20*3600e3)snap('tự động');});if(!STATE.lastBackup||Date.now()-STATE.lastBackup>7*864e5)toast('Đã lâu chưa sao lưu. Vào Cài đặt để sao lưu ra file.');}},6000);
 if('serviceWorker' in navigator&&location.protocol.indexOf('http')===0)navigator.serviceWorker.register('sw.js').catch(function(){});
-MissingLogo.intro({target:'#site-logo',word:'#site-word',theme:'dark',sound:false});
+MissingLogo.intro({target:'#site-logo',word:'#site-word',theme:'light',sound:false});
 
 })();</script></body></html>

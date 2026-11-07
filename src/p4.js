@@ -391,10 +391,10 @@ document.addEventListener('change',function(e){
   else if(el.id==='bu'){var u=uOf(S.hid,el.value);if(u)$('bpr').value=u.price;}
 });
 $('house').addEventListener('click',function(){if(H.length)houseSheet();});
-$('site-logo').innerHTML=MissingLogo.svg({size:34,theme:'dark'});
+$('site-logo').innerHTML=MissingLogo.svg({size:34,theme:'light'});
 var LD=loadSaved();if(LD==='corrupt')setTimeout(function(){warn('Dữ liệu trên máy bị lỗi, đã giữ lại bản gốc. Vào Cài đặt > Bản dự phòng để khôi phục.');},500);
 render();
 try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();}catch(e){}
 setTimeout(function(){if(H.length&&!STATE.demo){var last=0;snapList().then(function(l){last=l[0]?l[0].at:0;if(Date.now()-last>20*3600e3)snap('tự động');});if(!STATE.lastBackup||Date.now()-STATE.lastBackup>7*864e5)toast('Đã lâu chưa sao lưu. Vào Cài đặt để sao lưu ra file.');}},6000);
 if('serviceWorker' in navigator&&location.protocol.indexOf('http')===0)navigator.serviceWorker.register('sw.js').catch(function(){});
-MissingLogo.intro({target:'#site-logo',word:'#site-word',theme:'dark',sound:false});
+MissingLogo.intro({target:'#site-logo',word:'#site-word',theme:'light',sound:false});
