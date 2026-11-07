@@ -1,6 +1,6 @@
 import base64,sys
 LOGO=open('logo.svg.txt').read().replace('width="34"','').replace('height="34"','')
-def tile(n): return f'<span style="display:inline-grid;place-items:center;width:{n}px;height:{n}px;background:#0F172A;border-radius:22%;vertical-align:middle"><span style="display:block;width:{int(n*.78)}px;height:{int(n*.78)}px">{LOGO}</span></span>'
+def tile(n): return f'<span style="display:inline-grid;place-items:center;width:{n}px;height:{n}px;background:#FFFFFF;border-radius:22%;vertical-align:middle"><span style="display:block;width:{int(n*.78)}px;height:{int(n*.78)}px">{LOGO}</span></span>'
 def img(n,w=250):
     d=base64.b64encode(open('img/'+n+'.png','rb').read()).decode()
     return f'<img src="data:image/png;base64,{d}" style="width:{w}px;border-radius:14px;border:1px solid #BFDBFE">'
